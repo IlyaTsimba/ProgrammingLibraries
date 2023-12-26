@@ -1,0 +1,18 @@
+2
+
+1
+Scrapy
+Библиотека для Python
+Python
+2.70
+Scrapinghub
+BSD
+
+2
+Boost
+Библиотека для C++
+C++
+1.84
+David Abrahams
+Boost Software
+
