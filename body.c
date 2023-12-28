@@ -1,38 +1,42 @@
 #include "header.h"
 
-library_t* new_library(library_t *ptr_arr,int* ptr_size)
+library_t input_library(void)
 {
-
 	library_t library;
-	int sz = *ptr_size;
 
-	printf("Введите название библиотеки: ");
+	printf("Р’РІРµРґРёС‚Рµ РЅР°Р·РІР°РЅРёРµ Р±РёР±Р»РёРѕС‚РµРєРё: ");
 	gets(library.name);
 
-	printf("Введите описание библиотеки: ");
+	printf("Р’РІРµРґРёС‚Рµ РѕРїРёСЃР°РЅРёРµ Р±РёР±Р»РёРѕС‚РµРєРё: ");
 	gets(library.description);
 
-	printf("Введите язык программирования: ");
+	printf("Р’РІРµРґРёС‚Рµ СЏР·С‹Рє РїСЂРѕРіСЂР°РјРјРёСЂРѕРІР°РЅРёСЏ: ");
 	gets(library.language);
 
-	printf("Введите версию библиотеки: ");
+	printf("Р’РІРµРґРёС‚Рµ РІРµСЂСЃРёСЋ Р±РёР±Р»РёРѕС‚РµРєРё: ");
 	scanf("%f", &library.version);
 	getchar();
 
-	printf("Введите автора библиотеки: ");
+	printf("Р’РІРµРґРёС‚Рµ Р°РІС‚РѕСЂР° Р±РёР±Р»РёРѕС‚РµРєРё: ");
 	gets(library.author);
 
-	printf("Введите лицензию библиотеки: ");
+	printf("Р’РІРµРґРёС‚Рµ Р»РёС†РµРЅР·РёСЋ Р±РёР±Р»РёРѕС‚РµРєРё: ");
 	gets(library.license);
 
+	return library;
+}
 
-	sz++;
-	library.number = sz;
-	ptr_arr = (library_t*)realloc(ptr_arr, sz * sizeof(library_t));
-	ptr_arr[library.number - 1] = library;
-	*ptr_size = sz;
-	puts("\nБиблиотека успешно добавлена");
-	return ptr_arr;
+int new_library(library_t **ptr_arr, library_t library, int* ptr_size)
+{
+
+	library.number = *ptr_size + 1;
+	library_t* arr = (library_t*)malloc(library.number * sizeof(library_t));
+	arr = *ptr_arr;
+	arr[library.number - 1] = library;
+	ptr_arr = &arr;
+	*ptr_size = library.number;
+
+	return 1;
 }
 
 int choice_num(void)
@@ -42,15 +46,11 @@ int choice_num(void)
 	return x;
 }
 
-library_t* delete_library(library_t* ptr_arr, int* ptr_size)
+int delete_library(library_t* ptr_arr, int* ptr_size, int library_number)
 {
-	int library_number;
 	int newsize = *ptr_size;
-	puts("\nВведите номер библиотеки:");
-	library_number = choice_num();
-
 	if (library_number > *ptr_size)
-		puts("Введён неверный номер библиотеки");
+		return 0;
 	else
 	{
 		for (int i = library_number - 1; i < *ptr_size - 1; i++) {
@@ -64,82 +64,62 @@ library_t* delete_library(library_t* ptr_arr, int* ptr_size)
 			ptr_arr = (library_t*)malloc(newsize * sizeof(library_t));
 		else
 			ptr_arr = (library_t*)realloc(ptr_arr, newsize * sizeof(library_t));
-
-		puts("\nБиблиотека успешно удалена");
 	}
-
-	return ptr_arr;
+	return 1;
 }
 
-library_t* edit_library(library_t* ptr_arr)
+int edit_library(library_t* ptr_arr, int library_number, int num)
 {
-	int library_number;
-	int num;
-	puts("Введите номер библиотеки:");
-	library_number = choice_num();
-
-	puts("Что хотите изменить?");
-	puts("[1 - Название библиотеки]");
-	puts("[2 - Описание библиотеки]");
-	puts("[3 - Язык программирования]");
-	puts("[4 - Версию]");
-	puts("[5 - Автора]");
-	puts("[6 - Лицензию]");
-	puts("[7 - Всё]");
-
-	num = choice_num();
 	getchar();
-
 	switch (num) {
 	case 1:
-		printf("Введите название библиотеки: ");
+		printf("Р’РІРµРґРёС‚Рµ РЅР°Р·РІР°РЅРёРµ Р±РёР±Р»РёРѕС‚РµРєРё: ");
 		gets(ptr_arr[library_number-1].name);
 		break;
 	case 2:
-		printf("Введите описание библиотеки: ");
+		printf("Р’РІРµРґРёС‚Рµ РѕРїРёСЃР°РЅРёРµ Р±РёР±Р»РёРѕС‚РµРєРё: ");
 		gets(ptr_arr[library_number-1].description);
 		break;
 	case 3:
-		printf("Введите язык программирования: ");
+		printf("Р’РІРµРґРёС‚Рµ СЏР·С‹Рє РїСЂРѕРіСЂР°РјРјРёСЂРѕРІР°РЅРёСЏ: ");
 		gets(ptr_arr[library_number-1].language);
 		break;
 	case 4:
-		printf("Введите версию библиотеки: ");
+		printf("Р’РІРµРґРёС‚Рµ РІРµСЂСЃРёСЋ Р±РёР±Р»РёРѕС‚РµРєРё: ");
 		scanf("%f", &ptr_arr[library_number-1].version);
 		getchar();
 		break;
 	case 5:
-		printf("Введите автора библиотеки: ");
+		printf("Р’РІРµРґРёС‚Рµ Р°РІС‚РѕСЂР° Р±РёР±Р»РёРѕС‚РµРєРё: ");
 		gets(ptr_arr[library_number-1].author);
 		break;
 	case 6:
-		printf("Введите лицензию библиотеки: ");
+		printf("Р’РІРµРґРёС‚Рµ Р»РёС†РµРЅР·РёСЋ Р±РёР±Р»РёРѕС‚РµРєРё: ");
 		gets(ptr_arr[library_number-1].license);
 		break;
 	case 7:
-		printf("Введите название библиотеки: ");
+		printf("Р’РІРµРґРёС‚Рµ РЅР°Р·РІР°РЅРёРµ Р±РёР±Р»РёРѕС‚РµРєРё: ");
 		gets(ptr_arr[library_number -1].name);
 
-		printf("Введите описание библиотеки: ");
+		printf("Р’РІРµРґРёС‚Рµ РѕРїРёСЃР°РЅРёРµ Р±РёР±Р»РёРѕС‚РµРєРё: ");
 		gets(ptr_arr[library_number - 1].description);
 
-		printf("Введите язык программирования: ");
+		printf("Р’РІРµРґРёС‚Рµ СЏР·С‹Рє РїСЂРѕРіСЂР°РјРјРёСЂРѕРІР°РЅРёСЏ: ");
 		gets(ptr_arr[library_number - 1].language);
 		
-		printf("Введите версию библиотеки: ");
+		printf("Р’РІРµРґРёС‚Рµ РІРµСЂСЃРёСЋ Р±РёР±Р»РёРѕС‚РµРєРё: ");
 		scanf("%f", &ptr_arr[library_number - 1].version);
 		getchar();
 
-		printf("Введите автора библиотеки: ");
+		printf("Р’РІРµРґРёС‚Рµ Р°РІС‚РѕСЂР° Р±РёР±Р»РёРѕС‚РµРєРё: ");
 		gets(ptr_arr[library_number - 1].author);
 
-		printf("Введите лицензию библиотеки: ");
+		printf("Р’РІРµРґРёС‚Рµ Р»РёС†РµРЅР·РёСЋ Р±РёР±Р»РёРѕС‚РµРєРё: ");
 		gets(ptr_arr[library_number-1].license);
 
 		break;
 	}
-	puts("\nИнформация успешно изменена");
-	return ptr_arr;
+	return 0;
 }
 
 void show_library(library_t* ptr_arr,int index)
@@ -155,86 +135,73 @@ void show_library(library_t* ptr_arr,int index)
 
 library_t* show_all(library_t* ptr_arr, int size)
 {
-	printf("\n| %16s | %15s | %29s | %15s |  %4s  |  %15s  |  %15s  |\n", "Номер библиотеки", "Название библиотеки", "Описание библиотеки     ", "Язык программирования", "Версия", "Автор     ", "Лицензия   ");
+	printf("\n| %16s | %15s | %29s | %15s |  %4s  |  %15s  |  %15s  |\n", "РќРѕРјРµСЂ Р±РёР±Р»РёРѕС‚РµРєРё", "РќР°Р·РІР°РЅРёРµ Р±РёР±Р»РёРѕС‚РµРєРё", "РћРїРёСЃР°РЅРёРµ Р±РёР±Р»РёРѕС‚РµРєРё     ", "РЇР·С‹Рє РїСЂРѕРіСЂР°РјРјРёСЂРѕРІР°РЅРёСЏ", "Р’РµСЂСЃРёСЏ", "РђРІС‚РѕСЂ     ", "Р›РёС†РµРЅР·РёСЏ   ");
 	for (int i = 0; i < size; i++)
 		show_library(ptr_arr, i);
 	return ptr_arr;
 }
 
-//search
-
 char* put_term(void)
 {
 	char* term[51];
-	printf("Введите признак: ");
+	printf("Р’РІРµРґРёС‚Рµ РїСЂРёР·РЅР°Рє: ");
 	gets(term);
 	return term;
 }
 
-library_t* search(library_t* ptr_arr, int size)
+library_t* search(library_t* ptr_arr, int size, int searchNumber, int* ptr_arr_size)
 {
-	int searchNumber;
-
-	puts("\nВыберите признак поиска");
-	puts("[1 - по языку программирования]");
-	puts("[2 - по названию библиотеки]");
-
-	searchNumber = choice_num();
+	library_t* arr;
+	int arr_size = size;
 	switch (searchNumber){
 		case 1:
-			ptr_arr = search_libraryLanguage(ptr_arr, size);
+			arr = search_libraryLanguage(ptr_arr, &arr_size);
 			break;
 		case 2:
-			ptr_arr = search_libraryName(ptr_arr, size);
+			arr = search_libraryName(ptr_arr, &arr_size);
 			break;
 		default:
 			return ptr_arr;
 			break;
 	}
+	*ptr_arr_size = arr_size;
 	return ptr_arr;
 }
 
-library_t* search_libraryLanguage(library_t* ptr_arr, int size)
+library_t* search_libraryLanguage(library_t* ptr_arr, int* ptr_size)
 {
-	getchar();
-	char  *term = put_term();
-	char str[200];
-	char str_arr[7][50] = { "Номер библиотеки", "Название библиотеки", "Описание библиотеки     ", "Язык программирования", "Версия", "Автор     ", "Лицензия   " };
-	sprintf(str, "\n| %16s | %15s | %29s | %15s |  %4s  |  %15s  |  %15s  |", str_arr[0], str_arr[1], str_arr[2], str_arr[3], str_arr[4], str_arr[5], str_arr[6]);
-	puts(str);
-	for (int i = 0; i < size; i++)
-		if (strcmp(term, ptr_arr[i].language) == 0)
-			show_library(ptr_arr, i);
-	
-	return ptr_arr;
-}
-library_t* search_libraryName(library_t* ptr_arr, int size)
-{
+	library_t* arr = (library_t*)malloc(*ptr_size * sizeof(library_t));
 	getchar();
 	char* term = put_term();
-	char str[200];
-	char arr[7][50] = { "Номер библиотеки", "Название библиотеки", "Описание библиотеки     ", "Язык программирования", "Версия", "Автор     ", "Лицензия   " };
-	sprintf(str, "\n| %16s | %15s | %29s | %15s |  %4s  |  %15s  |  %15s  |", arr[0], arr[1], arr[2], arr[3], arr[4], arr[5], arr[6]);
-	puts(str);
-	for (int i = 0; i < size; i++)
-		if (strcmp(term, ptr_arr[i].name) == 0)
-			show_library(ptr_arr, i);
-
-	return ptr_arr;
+	int k = 0;
+	for (int i = 0; i < *ptr_size; i++)
+		if (strcmp(term, ptr_arr[i].language) == 0)
+		{
+			arr[k] = ptr_arr[i];
+			k++;
+		}
+	*ptr_size = k;
+	return arr;
 }
 
-//sort
-
-library_t* sort(library_t* ptr_arr, int size)
+library_t* search_libraryName(library_t* ptr_arr, int* ptr_size)
 {
-	int sortNumber;
+	library_t* arr = (library_t*)malloc(*ptr_size * sizeof(library_t));
+	getchar();
+	char* term = put_term();
+	int k = 0;
+	for (int i = 0; i < *ptr_size; i++)
+		if (strcmp(term, ptr_arr[i].name) == 0)
+		{
+			arr[k] = ptr_arr[i];
+			k++;
+		}
+	*ptr_size = k;
+	return arr;
+}
 
-	puts("Выберите сортировку");
-	puts("[1 - по версии]");
-	puts("[2 - по номеру]");
-	puts("[3 - qsort(по версии)]");
-
-	sortNumber = choice_num();
+library_t* sort(library_t* ptr_arr, int size, int sortNumber)
+{	
 	switch(sortNumber) {
 	case 1:
 		sort_libraryVersion(ptr_arr, size);
@@ -249,9 +216,9 @@ library_t* sort(library_t* ptr_arr, int size)
 		return ptr_arr;
 		break;
 	}
-	puts("\nСортировка прошла успешно");
 	return ptr_arr;
 }
+
 library_t* sort_libraryVersion(library_t* ptr_arr,int size)
 {
 	float num;
@@ -293,6 +260,7 @@ library_t* sort_libraryNumber(library_t* ptr_arr, int size)
 
 	return ptr_arr;
 }
+
 void compare(void* arg1, void* arg2)
 {
 	library_t* a = arg1;
@@ -307,7 +275,7 @@ void compare(void* arg1, void* arg2)
 	return 0;
 }
 
-void init_list(library_t* ptr_arr, int size)
+library_t* init_list(library_t* ptr_arr, int size)
 {
 	int t;
 
@@ -319,18 +287,18 @@ void init_list(library_t* ptr_arr, int size)
 		ptr_arr[t].author[0] = '\0';
 		ptr_arr[t].license[0] = '\0';
 	}
+	return ptr_arr;
 }
+
 int save(library_t* ptr_arr, int size)
 {
 	FILE* fp;
 
 	if ((fp = fopen("library_list.txt", "wt")) == NULL) {
-		puts("Ошибка открытия файла");
+		
 		return 0;
 	};
-
 	fprintf(fp, "%d\n\n", size);
-
 	for (int i = 0; i < size; i++) {
 		fprintf(fp, "%d\n", ptr_arr[i].number);
 		fprintf(fp, "%s\n", ptr_arr[i].name);
@@ -340,28 +308,25 @@ int save(library_t* ptr_arr, int size)
 		fprintf(fp, "%s\n", ptr_arr[i].author);
 		fprintf(fp, "%s\n\n", ptr_arr[i].license);
 	}
-
 	fclose(fp);
-	puts("\nБаза данных успешно сохранена");
-	return 0;
+	return 1;
 }
-int load(library_t **pp_arr, int size)
+
+int load(library_t **pp_arr, int* ptr_size)
 {
 	FILE* fp;
 	if ((fp = fopen("library_list.txt", "rt")) == NULL) {
-		puts("Ошибка открытия файла");
 		return 0;
 	};
 
-	fscanf(fp, "%d\n\n", &size);
+	fscanf(fp, "%d\n\n", ptr_size);	//С‡С‚РµРЅРёРµ СЂР°Р·РјРµСЂР° РјР°СЃСЃРёРІР°
 
-	if (size == NULL) {
-		puts("В файле отсутсвуют элементы");
-		return 0;
+	if (*ptr_size == NULL) {
+		return 1;
 	} else {	
-		library_t *new_arr = (library_t*)malloc(size * sizeof(library_t));
-		init_list(new_arr, size);
-		for (int i = 0; i < size; i++){
+		library_t *new_arr = (library_t*)malloc(*ptr_size * sizeof(library_t));
+		init_list(new_arr, *ptr_size);
+		for (int i = 0; i < *ptr_size; i++){
 			fscanf(fp, "%d\n", &new_arr[i].number);
 
 			fgets(new_arr[i].name, sizeof(new_arr[i].name), fp);
@@ -382,12 +347,9 @@ int load(library_t **pp_arr, int size)
 			strtok(new_arr[i].license, "\n");
 		}
 		*pp_arr = new_arr;
+
 		fclose(fp);
-		puts("База данных успешно загружена");
-		return size;
+		return 2;
 	}
 	
 }
-
-
-
