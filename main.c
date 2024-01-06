@@ -38,7 +38,6 @@ int main(void)
 
 		number = choice_num();
 		getchar();
-		system("cls");
 
 		switch (number) {
 
